@@ -1,9 +1,27 @@
-import { TextInput, Button, Checkbox, Label, } from 'flowbite-react'
-import React from 'react'
+import { TextInput, Button, Label, } from 'flowbite-react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 
+
 export default function SignUp() {
+  const [formData, setFormData] = useState({})
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+    } catch (error) { }
+  };
+
   return (
     <div className='min-h-screen mt-20'>
       <div className='flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5'>
@@ -22,8 +40,8 @@ export default function SignUp() {
         {/* right */}
 
         <div className='flex-1'>
-          <from className='flex flex-col gap-4'>
-            <div className=''>
+          <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+            <div>
               <Label value='Your username' />
               <TextInput
                 type="text"
@@ -32,22 +50,22 @@ export default function SignUp() {
                 id='username'
                 name='username'
                 required
-              />
+                onChange={handleChange} />
             </div>
 
-            <div className=''>
+            <div>
               <Label value='Your email' />
               <TextInput
                 type="email"
-                placeholder="Email"
+                placeholder='name@company.com'
                 className='w-full'
                 id='email'
                 name='email'
                 required
-              />
+                onChange={handleChange} />
             </div>
 
-            <div className=''>
+            <div>
               <label value='Your password'>Your password</label>
               <TextInput
                 type="password"
@@ -56,21 +74,23 @@ export default function SignUp() {
                 id='password'
                 name='password'
                 required
-              />
-
+                onChange={handleChange} />
             </div>
+
             <Button gradientDuoTone='purpleToPink' type='submit'>
               Sign up
             </Button>
-          </from>
+          </form>
+
           <div className='flex gap-2 text-sm mt-5'>
             <span >
               Already have an account?
               <Link to='/sign-in' className='text-blue-500'>Sign in</Link>
             </span>
           </div>
+
         </div>
       </div>
     </div>
-  )
+  );
 }
