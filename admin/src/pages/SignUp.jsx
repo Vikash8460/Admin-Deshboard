@@ -31,6 +31,7 @@ export default function SignUp() {
       }
       setLoading(false);
       if (res.ok) {
+        alert ('User Created Successfully');
         navigate('/sign-in');
       }
     } catch (error) {
